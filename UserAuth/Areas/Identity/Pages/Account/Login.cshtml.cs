@@ -3,6 +3,7 @@
 #nullable disable
 
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using UserAuth.Models;
 
 namespace UserAuth.Areas.Identity.Pages.Account
 {
@@ -99,11 +102,16 @@ namespace UserAuth.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var httpClient = new HttpClient();
+                var content = new StringContent(JsonConvert.SerializeObject(Input), Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync("https://localhost:5001/api/account/login", content);
+
                 if (result.Succeeded)
                 {
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseData);
+                    HttpContext.Session.SetString("JwtToken", tokenResponse.Token);
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
