@@ -41,7 +41,7 @@ public class AccountController : ControllerBase
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String),
-                    new Claim(ClaimTypes.Name, user.Name, ClaimValueTypes.String) // Asumiendo que tienes un campo Name
+                    new Claim(ClaimTypes.Name, user.Name, ClaimValueTypes.String)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _configuration["Jwt:Issuer"],
@@ -57,7 +57,7 @@ public class AccountController : ControllerBase
         }
         return Unauthorized();
     }
-    
+
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] LogoutViewModel model)
     {
