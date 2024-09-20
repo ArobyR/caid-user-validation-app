@@ -10,6 +10,7 @@ using UserAuth.Services;
 
 namespace UserAuth.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
