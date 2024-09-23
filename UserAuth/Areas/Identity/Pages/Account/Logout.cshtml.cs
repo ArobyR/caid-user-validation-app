@@ -44,7 +44,7 @@ namespace UserAuth.Areas.Identity.Pages.Account
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var content = new StringContent(JsonConvert.SerializeObject(logoutModel), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync("https://localhost:5001/api/account/logout", content);
+            var response = await httpClient.PostAsync("https://localhost:5074/api/account/logout", content);
 
             if (response.IsSuccessStatusCode)
             {

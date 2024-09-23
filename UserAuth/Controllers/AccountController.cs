@@ -10,23 +10,20 @@ using UserAuth.Services;
 
 namespace UserAuth.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly RevokedTokenService _revokedTokenService;
 
-    public AccountController(RevokedTokenService revokedTokenService)
-    {
-        _revokedTokenService = revokedTokenService;
-    }
-    public AccountController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public AccountController(UserManager<IdentityUser> userManager, IConfiguration configuration, RevokedTokenService revokedTokenService)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _revokedTokenService = revokedTokenService;
+
     }
 
     [HttpPost("login")]
@@ -36,25 +33,25 @@ public class AccountController : ControllerBase
         if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Password"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String),
-                    new Claim(ClaimTypes.Name, user.Name, ClaimValueTypes.String)
+                    new Claim(ClaimTypes.Name, user.Email, ClaimValueTypes.String)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
+                Issuer = _configuration["JwtSettings:Issuer"],
+                Audience = _configuration["JwtSettings:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            HttpContext.Session.SetString("Name", user.Name);
+            HttpContext.Session.SetString("Name", user.Email);
 
-            return Ok(new { token = tokenHandler.WriteToken(token), user.Name });
+            return Ok(new { token = tokenHandler.WriteToken(token), user.Email });
         }
         return Unauthorized();
     }

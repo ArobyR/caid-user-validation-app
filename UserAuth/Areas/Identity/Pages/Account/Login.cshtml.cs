@@ -105,7 +105,7 @@ namespace UserAuth.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var httpClient = new HttpClient();
                 var content = new StringContent(JsonConvert.SerializeObject(Input), Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync("https://localhost:5001/api/account/login", content);
+                var response = await httpClient.PostAsync("http://localhost:5074/api/Account/login", content);
 
                 if (result.Succeeded)
                 {
