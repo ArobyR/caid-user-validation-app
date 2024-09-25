@@ -6,10 +6,8 @@ Authentication system with validations using C# with ASP.NET Core MVC.
 - Use PostgreSQL as a database.
 
 ### :lock: Security
-- Implement JWT and sessions.
+- TODO: Implement JWT
+- Create cookies by session.
 
 ### 🗒️ Notes
-- Create a service layer and use injections as a good practice.
-- Use Identity UI as library in this project. [post about this][post]
-
-[post]: https://devblogs.microsoft.com/dotnet/aspnetcore-2-1-identity-ui/
+- TODO: Create a service layer and use injections for manage revoke JWT's in a db.
