@@ -43,10 +43,10 @@
                             <button class="btn btn-primary" type="submit">Sign Up</button>
                         </div>
 
-                        @if (ViewData["Message"] != null)
+                        @if (ViewBag.Message != null)
                         {
                             <div class="alert alert-danger" role="alert">
-                                @ViewData["Message"]
+                                <span>@ViewBag.Message</span>
                             </div>
                         }
 

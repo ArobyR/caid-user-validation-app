@@ -38,7 +38,7 @@ namespace UserAuthApp.Controllers
 
             if (model.Password != model.ConfirmPassword)
             {
-                ViewData["Message"] = "Password and Confirm password are not the same";
+                ViewBag.Message = "Password and Confirm password are not the same";
                 return View();
             }
 
@@ -46,7 +46,7 @@ namespace UserAuthApp.Controllers
 
             if (userSearched != null)
             {
-                ViewData["Message"] = "Verificate email or password";
+                ViewBag.Message = "Verificate email or password";
                 return View();
             }
 
@@ -62,7 +62,7 @@ namespace UserAuthApp.Controllers
 
             if (user.IdUser != 0) return RedirectToAction("Login", "Access");
 
-            ViewData["Message"] = "Something was wrong...";
+            ViewBag.Message = "Something was wrong...";
             return View();
 
         }
@@ -89,7 +89,7 @@ namespace UserAuthApp.Controllers
             if (userSearched == null ||
                 _passwordHasher.VerifyHashedPassword(userSearched, userSearched.Password, model.Password) != PasswordVerificationResult.Success)
             {
-                ViewData["Message"] = "Verificate email or password";
+                ViewBag.Message = "Verificate email or password";
                 return View();
             }
 
